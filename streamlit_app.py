@@ -2,6 +2,24 @@ import streamlit as st
 import pandas as pd
 from mlxtend.frequent_patterns import apriori, association_rules
 
+import qrcode
+from io import BytesIO
+
+# Input for QR code URL
+url = st.text_input("Enter the text or URL for which you want to generate a QR code:")
+
+if url:
+    # Generate the QR code
+    qr = qrcode.make(url)
+    
+    # Save the QR code image to a BytesIO object
+    img_buffer = BytesIO()
+    qr.save(img_buffer)
+    img_buffer.seek(0)  # Go back to the beginning of the BytesIO buffer
+    
+    # Display the QR code image in Streamlit
+    st.image(img_buffer, use_column_width=True)
+    
 # Product icon mapping
 product_icons = {
     "apple": "🍎",
