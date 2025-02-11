@@ -26,25 +26,6 @@ import streamlit as st
 import qrcode
 from io import BytesIO
 
-st.markdown("""
-    <style>
-    /* Adjust the sidebar padding */
-    .css-1d391kg {
-        padding-top: 0rem;
-        padding-bottom: 0rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-    }
-    /* Adjust the main content padding */
-    .css-18e3th9 {
-        padding-top: 0rem;
-        padding-bottom: 0rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
 
 # Input for QR code URL
 url = st.text_input("Enter the text or URL for which you want to generate a QR code:")
@@ -162,7 +143,7 @@ if new_basket_input:
 ############################## Make table larger
 st.title("Transactional Data Table")
 #st.dataframe(df_display)
-
+df_display = df_display.rename(columns= {"Items": "Items in the Basket"})
 # Convert the dataframe to an HTML table
 html_table = df_display.to_html(index=False)
 
@@ -176,10 +157,15 @@ custom_css = """
         margin-left: auto;
         margin-right: auto;
     }
-    .dataframe th, .dataframe td {
+    .dataframe th {
         padding: 8px;
         border: 1px solid black;
-        text-align: left; /* Center-aligns text in both headers and data cells */
+        text-align: left !important; /* Force left alignment for headers */
+    }
+    .dataframe td {
+        padding: 8px;
+        border: 1px solid black;
+        text-align: left; /* Left-align data as well */
     }
     </style>
     """
