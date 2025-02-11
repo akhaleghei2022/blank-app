@@ -1,9 +1,50 @@
-import streamlit as st
+# show number of rules created with no filter: 8 products, 14 baskets, 1,477 rules 
+# set max-len=2, and sort by lift to talk about complemantary, substitude, and independent product
+# lift higher than 1: complementary: milk and coffee have more than 50% support,
+# sort by lift: minimum lift: coffe and tea + appple and pear but which of them we are more confident? high support coffee and tea
+# lift at 1: independent product: coffee and meat with 50% support, pear and coffee with 30% support
+# by setting min_support = .5, the number of rules reduces to 18
+# minimum support = products set bought together is taking care of the most criteria because of closure property of sets
+# minimum confidence 
+# high lift due to low support (fake), high support-> will not create high lift and not recommendation .
+# low number of baskets: minimum support is high , maximum support is low
+# add new product sugar?no rule change why!
+# add sugar and coffee  
+# remove one basket and check the number of rules 
+# remove baket 1, remove 2 and remove 1, 2 ?? it does not change the initial number of rules generated but it does change probabilities 
+# remove 1,2,3,4,5,7,10,12,14 basket, 6 products and 56 rules with 8 products 1478 rules 
+# remove 1,2,3,4,5,7,10,12,14 basket, add sugar and no #rule changes, add sugar and coffee and see for lift 1.5? 
+# min support at .01, .07<confidence<1     but min support = .5, .53<confidence< 1  
+# min support at .01, .28<lift< 7          but min support = .5, .95<lift< 1.55  
+# min support at .6, lift=.969 
+# min support at .6 and lift =1 will not give recommendation 
+
 import pandas as pd
 from mlxtend.frequent_patterns import apriori, association_rules
+import streamlit as st
 
 import qrcode
 from io import BytesIO
+
+st.markdown("""
+    <style>
+    /* Adjust the sidebar padding */
+    .css-1d391kg {
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+        padding-left: 0rem;
+        padding-right: 0rem;
+    }
+    /* Adjust the main content padding */
+    .css-18e3th9 {
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+        padding-left: 0rem;
+        padding-right: 0rem;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 
 # Input for QR code URL
 url = st.text_input("Enter the text or URL for which you want to generate a QR code:")
@@ -29,21 +70,27 @@ product_icons = {
     "pear": "🍐",
     "milk": "🥛",
     "tea": "🍵",
-    "coffee": "☕"
+    "coffee": "☕",
+    "banana": "🍌", 
+    "egg": "🥚",
+    "strawberry": "🍓",
+    "grapes": "🍇",
+    "watermelon": "🍉",
+    "ice cream": "🍨",
+     "fish": "🐟",
+    "carrot": "🥕",
+    "broccoli": "🥦"
 }
 
 # Initial simulated transactional data
 data = {
-    'Basket': list(range(1, 9)),
+    'Basket': list(range(1, 6)),  # Adjusted for new baskets
     'Items': [
-        ["apple", "beer", "rice", "meat"],
-        ["apple", "beer", "rice"],
-        ["apple", "beer"],
-        ["apple", "pear"],
-        ["milk", "beer", "rice", "meat"],
-        ["milk", "beer", "rice"],
-        ["milk", "beer"],
-        ["milk", "pear"]
+        ["apple", "milk", "fish"],  # Complementary: coffee and milk
+        ["beer", "meat", "fish"],  # Independent: meat and pear
+        ["tea", "beer", "pear"],  # Invalid: coffee and tea (substitute), will be removed
+        ["apple", "fish"],  # No milk or coffee together (substitute condition)
+        ["pear", "beer"]
     ]
 }
 df = pd.DataFrame(data)
@@ -54,7 +101,6 @@ df_display['Items'] = df_display['Items'].apply(
     lambda items: ", ".join([f"{product_icons.get(item, '❓')} {item}" for item in items])
 )
 
-#st.dataframe(df_display)
 
 # Add new basket
 def add_new_basket(new_baskets_input):
@@ -76,51 +122,74 @@ def add_new_basket(new_baskets_input):
     return df_display
 
 # Remove basket
-# Remove basket with a default option if invalid input
-def remove_basket(basket_id=None):
+# Modify remove_basket function to accept a list of basket IDs
+def remove_basket(basket_ids=None):
     """
-    Remove a basket from the transactional data.
-    If basket_id is None or invalid, remove the first basket with valid data.
+    Remove multiple baskets from the transactional data.
     """
     global df, df_display
 
-    # If the user didn't provide a valid basket_id, set the default basket to remove
-    if basket_id is not None and basket_id > len(df):
-        # Find the first basket that doesn't have null values
-        basket_to_remove = df['Basket'].iloc[0]
-    else:
-        basket_to_remove = basket_id
+    if basket_ids is not None:
+        # Convert the input string to a list of integers (basket IDs)
+        basket_ids_to_remove = [int(basket_id.strip()) for basket_id in basket_ids.split(",")]
 
-    # Remove the basket
-    df = df[df['Basket'] != basket_to_remove].reset_index(drop=True)
-    df_display = df_display[df_display['Basket'] != basket_to_remove].reset_index(drop=True)
+        # Remove the baskets specified by the user
+        df = df[~df['Basket'].isin(basket_ids_to_remove)].reset_index(drop=True)
+        df_display = df_display[~df_display['Basket'].isin(basket_ids_to_remove)].reset_index(drop=True)
     
     return df_display
 
+# Sidebar for removing multiple baskets
+st.sidebar.title("Remove Baskets")
+# Text input in the sidebar
+basket_ids_to_remove = st.sidebar.text_input( "Enter the basket IDs to remove (comma-separated, e.g., '1, 3, 5'):")
+
+if basket_ids_to_remove:
+    df_display = remove_basket(basket_ids_to_remove.strip())
+
+#if basket_to_remove != None:
+#    df_display = remove_basket(basket_id=basket_to_remove)
 
 # Sidebar for adding new baskets
 st.sidebar.title("Create New Basket")
 new_basket_input = st.sidebar.text_area(
-    "Enter items in your basket (comma-separated, e.g., 'Milk, Tea, Coffee'). Add one basket at a time:"
+    "Enter items in your basket (comma-separated, e.g., 'apple, milk, fish, meat, beer, tea, pear, banada, coffee, egg,straberry, grapes, watermelon, ice cream, fish, carrot, broccoli'). Add one basket at a time:"
 )
+
 
 if new_basket_input:
     df_display = add_new_basket(new_basket_input.strip())
-
-# Sidebar for removing a basket
-st.sidebar.title("Remove Basket")
-basket_to_remove = st.sidebar.number_input(
-    "Enter the basket ID to remove (leave empty for the first basket):", 
-    min_value=-1, max_value=len(df), step=1, value=None
-)
-
-if basket_to_remove != None:
-    df_display = remove_basket(basket_id=basket_to_remove)
-
-
+############################## Make table larger
 st.title("Transactional Data Table")
-st.dataframe(df_display)
+#st.dataframe(df_display)
 
+# Convert the dataframe to an HTML table
+html_table = df_display.to_html(index=False)
+
+# Add custom CSS for font size and styling
+# Define custom CSS to style and set the width of the table and its columns
+custom_css = """
+    <style>
+    .dataframe {
+        font-size: 20px !important;
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .dataframe th, .dataframe td {
+        padding: 8px;
+        border: 1px solid black;
+        text-align: left; /* Center-aligns text in both headers and data cells */
+    }
+    </style>
+    """
+
+# Combine CSS and HTML
+html_code = custom_css + html_table
+
+# Display the HTML table with Streamlit
+st.markdown(html_table, unsafe_allow_html=True)
+######################################
 # Preprocess data into transaction format
 def preprocess_transactions(transactions):
     all_items = sorted(set(item.lower() for sublist in transactions for item in sublist))
@@ -134,19 +203,42 @@ transaction_data.index = [f"Basket {i+1}" for i in range(len(transaction_data))]
 
 # Sidebar sliders for thresholds
 st.sidebar.title("Adjust Thresholds")
-min_support = st.sidebar.slider("Min Support", 0.0, 1.0, 0.5, 0.05)
-min_confidence = st.sidebar.slider("Min Confidence", 0.0, 1.0, 0.5, 0.05)
-min_lift = st.sidebar.slider("Min Lift", 0.0, 5.0, 0.05, 0.05)
+min_antecedent_support = st.sidebar.slider("Min antecedent Support", 0.0001, 1.0, 0.0001, 0.01)
+min_consequent_support = st.sidebar.slider("Min consequents Support", 0.0001, 1.0, 0.0001, 0.01)
+min_support = st.sidebar.slider("Min Support", 0.0001, 1.0, 0.0001, 0.01)
+min_confidence = st.sidebar.slider("Min Confidence", 0.0001, 1.0, 0.0001, 0.01)
+#min_lift = st.sidebar.slider("Min Lift", 0.01, 5.0, 0.05, 0.01)
+max_len = st.sidebar.slider("Max Length of Itemset", 1, len(transaction_data.columns), len(transaction_data.columns))
 
-# Generate frequent itemsets and association rules
-frequent_itemsets = apriori(transaction_data, min_support=min_support, use_colnames=True)
-rules = association_rules(frequent_itemsets, metric="lift", min_threshold=min_lift)
-filtered_rules = rules[
-    (rules['support'] >= min_support) &
-    (rules['confidence'] >= min_confidence) &
-    (rules['lift'] >= min_lift)
-]
+frequent_itemsets = apriori(transaction_data, min_support=min_support, use_colnames=True, max_len=max_len)
 
+# Generate association rules (only if frequent_itemsets is not empty)
+if not frequent_itemsets.empty:
+    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=min_confidence)
+    # Apply additional filtering
+    filtered_rules = rules[
+        (rules['support'] >= min_support) &
+        (rules['confidence'] >= min_confidence) &
+    (rules['antecedent support'] >= min_antecedent_support) &
+    (rules['consequent support'] >= min_consequent_support)
+    ]
+else:
+    filtered_rules = pd.DataFrame(columns=['antecedents','antecedent support' ,'consequents', 'consequent support', 'support', 'confidence'])
+
+# Number of unique products (items) in the transactional data
+num_products = len(df['Items'].explode().unique())
+
+# Number of baskets (transactions) in the data
+num_baskets = len(df)
+
+# Number of rules after filtering
+num_filtered_rules = len(filtered_rules)
+###################################
+# Display information in Streamlit
+st.markdown(f"#### Number of products: {num_products}")
+st.markdown(f"#### Number of baskets: {num_baskets}")
+st.markdown(f"#### Number of association rules: {num_filtered_rules}")
+######################################
 # Format rules for display
 def format_rules(rules_df):
     rules_df['antecedents'] = rules_df['antecedents'].apply(
@@ -159,28 +251,25 @@ def format_rules(rules_df):
 
 filtered_rules_display = format_rules(filtered_rules.copy())
 
-st.title("Filtered Association Rules")
-st.dataframe(filtered_rules_display[['antecedents', 'consequents','consequent support', 'support', 'confidence', 'lift']])
+# Convert the dataframe to an HTML table
+html_table = filtered_rules_display[['antecedents','antecedent support' ,'consequents', 'consequent support', 'support', 'confidence']].to_html(index=False)
 
-# Smart basket suggestions
+# Format rules for display
+if not filtered_rules.empty:
+    filtered_rules_display = format_rules(filtered_rules.copy())
+    st.title("Filtered Association Rules")
+    #st.dataframe(filtered_rules_display[['antecedents','antecedent support' ,'consequents', 'consequent support', 'support', 'confidence']])
+    st.markdown(html_table, unsafe_allow_html=True)
+else:
+    st.warning("No association rules found for the given thresholds.")
+######################################################## Smart basket suggestions
 st.title("Smart Basket Suggestions")
 all_antecedents = set(item for rule in filtered_rules['antecedents'] for item in rule)
 smart_basket = {f"{product_icons.get(item, '❓')} {item}" for item in all_antecedents}
-st.markdown(f"**<span style='color:red'>Suggested Smart Basket: {', '.join(smart_basket)}</span>**", unsafe_allow_html=True)
-
-# Forgotten item suggestions
-st.title("Check for Forgotten Items in Your Basket")
-forgotten_basket_input = st.text_input("Enter the items already in your basket (comma-separated):")
-
-if forgotten_basket_input:
-    user_items = {item.strip().lower() for item in forgotten_basket_input.split(',')}
-    forgotten_items = set()
-    for antecedent in filtered_rules['antecedents']:
-        if not antecedent.issubset(user_items):
-            forgotten_items.update(antecedent - user_items)
-
-    forgotten_items_with_icons = {f"{product_icons.get(item, '❓')} {item}" for item in forgotten_items}
-    if forgotten_items:
-        st.markdown(f"**<span style='color:red'>Forgotten items: {', '.join(forgotten_items_with_icons)}</span>**", unsafe_allow_html=True)
-    else:
-        st.write("No forgotten items found.")
+html_string = f"""
+<p style='font-size:30px; color:red;'>
+    <strong>Suggested Smart Basket: {', '.join(smart_basket)}</strong>
+</p>
+"""
+# Display the styled HTML
+st.markdown(html_string, unsafe_allow_html=True)
