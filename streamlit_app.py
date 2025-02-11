@@ -222,7 +222,7 @@ if not frequent_itemsets.empty:
     (rules['antecedent support'] >= min_antecedent_support) &
     (rules['consequent support'] >= min_consequent_support)
     ]
-    filtered_rules.sort_values(by=['confidence','consequent support','antecedent support','support'],inplace=True)
+    filtered_rules.sort_values(by=['confidence','consequent support','antecedent support','support'],inplace=True,ascending=False)
 
 else:
     filtered_rules = pd.DataFrame(columns=['antecedents','antecedent support' ,'consequents', 'consequent support', 'support', 'confidence'])
