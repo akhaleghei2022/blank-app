@@ -222,9 +222,10 @@ if not frequent_itemsets.empty:
     (rules['antecedent support'] >= min_antecedent_support) &
     (rules['consequent support'] >= min_consequent_support)
     ]
+    filtered_rules.sort_values(by=['confidence','consequent support','antecedent support','support'],inplace=True)
+
 else:
     filtered_rules = pd.DataFrame(columns=['antecedents','antecedent support' ,'consequents', 'consequent support', 'support', 'confidence'])
-    filtered_rules.sort_values(by=['confidence','consequent support','antecedent support','support'],inplace=True)
 
 # Number of unique products (items) in the transactional data
 num_products = len(df['Items'].explode().unique())
