@@ -134,7 +134,7 @@ if basket_ids_to_remove:
 # Sidebar for adding new baskets
 st.sidebar.title("Create New Basket")
 new_basket_input = st.sidebar.text_area(
-    "Enter items in your basket (comma-separated, e.g., 'apple, milk, fish, meat, beer, tea, pear, banada, coffee, egg,straberry, grapes, watermelon, ice cream, fish, carrot, broccoli'). Add one basket at a time:"
+    "Enter items in your basket (comma-separated, e.g., 'apple, milk, fish, meat, beer, tea, pear, banana, coffee, egg,strawberry, grapes, watermelon, ice cream, fish, carrot, broccoli'). Add one basket at a time:"
 )
 
 
@@ -189,7 +189,7 @@ transaction_data.index = [f"Basket {i+1}" for i in range(len(transaction_data))]
 
 # Sidebar sliders for thresholds
 st.sidebar.title("Adjust Thresholds")
-min_antecedent_support = st.sidebar.slider("Min Antecedent Support", 0.0001, 1.0, 0.0001, 0.01)
+min_antecedent_support = st.sidebar.slider("Min Antecedents Support", 0.0001, 1.0, 0.0001, 0.01)
 min_consequent_support = st.sidebar.slider("Min Consequents Support", 0.0001, 1.0, 0.0001, 0.01)
 min_support = st.sidebar.slider("Min Support", 0.0001, 1.0, 0.0001, 0.01)
 min_confidence = st.sidebar.slider("Min Confidence", 0.0001, 1.0, 0.0001, 0.01)
@@ -249,7 +249,8 @@ if not filtered_rules.empty:
     #st.dataframe(filtered_rules_display[['antecedents','antecedent support' ,'consequents', 'consequent support', 'support', 'confidence']])
     st.markdown(html_table, unsafe_allow_html=True)
 else:
-    st.warning("No association rules found for the given thresholds.")
+    st.markdown("No association rules found for the given thresholds.")
+    #st.markdown(f"#### Number of products: {num_products}")
 ######################################################## Smart basket suggestions
 st.title("Smart Basket Suggestions")
 all_antecedents = set(item for rule in filtered_rules['antecedents'] for item in rule)
