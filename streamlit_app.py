@@ -189,12 +189,12 @@ transaction_data.index = [f"Basket {i+1}" for i in range(len(transaction_data))]
 
 # Sidebar sliders for thresholds
 st.sidebar.title("Adjust Thresholds")
-min_antecedent_support = st.sidebar.slider("Min antecedent Support", 0.0001, 1.0, 0.0001, 0.01)
-min_consequent_support = st.sidebar.slider("Min consequents Support", 0.0001, 1.0, 0.0001, 0.01)
+min_antecedent_support = st.sidebar.slider("Min Antecedent Support", 0.0001, 1.0, 0.0001, 0.01)
+min_consequent_support = st.sidebar.slider("Min Consequents Support", 0.0001, 1.0, 0.0001, 0.01)
 min_support = st.sidebar.slider("Min Support", 0.0001, 1.0, 0.0001, 0.01)
 min_confidence = st.sidebar.slider("Min Confidence", 0.0001, 1.0, 0.0001, 0.01)
 #min_lift = st.sidebar.slider("Min Lift", 0.01, 5.0, 0.05, 0.01)
-max_len = st.sidebar.slider("Max Length of Itemset", 1, len(transaction_data.columns), len(transaction_data.columns))
+max_len = st.sidebar.slider("Max Length of Product Combinations", 1, len(transaction_data.columns), len(transaction_data.columns))
 
 frequent_itemsets = apriori(transaction_data, min_support=min_support, use_colnames=True, max_len=max_len)
 
@@ -245,7 +245,7 @@ html_table = filtered_rules_display[['antecedents','antecedent support' ,'conseq
 # Format rules for display
 if not filtered_rules.empty:
     filtered_rules_display = format_rules(filtered_rules.copy())
-    st.title("Filtered Association Rules")
+    st.title("Association Rules")
     #st.dataframe(filtered_rules_display[['antecedents','antecedent support' ,'consequents', 'consequent support', 'support', 'confidence']])
     st.markdown(html_table, unsafe_allow_html=True)
 else:
