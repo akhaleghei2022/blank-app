@@ -209,7 +209,7 @@ plt.xticks(rotation=45, ha='right')
 ax1.tick_params(axis='both', labelsize=20)
 
 # Add gridlines
-ax1.grid(True, linestyle='--', alpha=0.5)
+ax1.grid(True, linestyle='--', alpha=1)
 
 
 # Show the plot in Streamlit
