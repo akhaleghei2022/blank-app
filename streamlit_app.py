@@ -25,6 +25,9 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import qrcode
 from io import BytesIO
+import sys
+st.write(sys.executable) 
+
 #!pip install seaborn
 import seaborn as sns
 
