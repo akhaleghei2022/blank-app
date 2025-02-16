@@ -194,7 +194,7 @@ st.sidebar.title("Adjust Thresholds")
 min_support = st.sidebar.slider("Min Support", 0.0001, 1.0, 0.0001, 0.01)
 min_confidence = st.sidebar.slider("Min Confidence", 0.0001, 1.0, 0.0001, 0.01)
 #min_lift = st.sidebar.slider("Min Lift", 0.01, 5.0, 0.05, 0.01)
-max_len = st.sidebar.slider("Max Length of Product Combinations", 1, len(transaction_data.columns), len(transaction_data.columns))
+#max_len = st.sidebar.slider("Max Length of Product Combinations", 1, len(transaction_data.columns), len(transaction_data.columns))
 
 frequent_itemsets = apriori(transaction_data, min_support=min_support, use_colnames=True, max_len=max_len)
 
