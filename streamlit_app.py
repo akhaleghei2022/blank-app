@@ -146,13 +146,7 @@ st.title("Transactional Data Table")
 df_display = df_display.rename(columns= {"Items": "Items in the Basket"})
 # Convert the dataframe to an HTML table
 html_table = df_display.to_html(index=False)
-############################ Display frequency of table 
-# Frequency table of products (sum of 1s for each product)
-product_frequencies = df.sum().sort_values(ascending=False)
 
-# Plotting the frequency table
-st.write("Product Frequency Table:")
-st.bar_chart(product_frequencies)
 ############################
 # Add custom CSS for font size and styling
 # Define custom CSS to style and set the width of the table and its columns
