@@ -189,8 +189,8 @@ transaction_data.index = [f"Basket {i+1}" for i in range(len(transaction_data))]
 
 # Sidebar sliders for thresholds
 st.sidebar.title("Adjust Thresholds")
-min_antecedent_support = st.sidebar.slider("Min Antecedents Support", 0.0001, 1.0, 0.0001, 0.01)
-min_consequent_support = st.sidebar.slider("Min Consequents Support", 0.0001, 1.0, 0.0001, 0.01)
+#min_antecedent_support = st.sidebar.slider("Min Antecedents Support", 0.0001, 1.0, 0.0001, 0.01)
+#min_consequent_support = st.sidebar.slider("Min Consequents Support", 0.0001, 1.0, 0.0001, 0.01)
 min_support = st.sidebar.slider("Min Support", 0.0001, 1.0, 0.0001, 0.01)
 min_confidence = st.sidebar.slider("Min Confidence", 0.0001, 1.0, 0.0001, 0.01)
 #min_lift = st.sidebar.slider("Min Lift", 0.01, 5.0, 0.05, 0.01)
@@ -204,14 +204,11 @@ if not frequent_itemsets.empty:
     # Apply additional filtering
     filtered_rules = rules[
         (rules['support'] >= min_support) &
-        (rules['confidence'] >= min_confidence) &
-    (rules['antecedent support'] >= min_antecedent_support) &
-    (rules['consequent support'] >= min_consequent_support)
-    ]
-    filtered_rules.sort_values(by=['confidence','consequent support','antecedent support','support'],inplace=True,ascending=False)
+        (rules['confidence'] >= min_confidence)]
+    filtered_rules.sort_values(by=['confidence','support'],inplace=True,ascending=False)
 
 else:
-    filtered_rules = pd.DataFrame(columns=['antecedents','antecedent support' ,'consequents', 'consequent support', 'support', 'confidence'])
+    filtered_rules = pd.DataFrame(columns=['antecedents','consequents', 'support', 'confidence'])
 
 # Number of unique products (items) in the transactional data
 num_products = len(df['Items'].explode().unique())
@@ -240,7 +237,7 @@ def format_rules(rules_df):
 filtered_rules_display = format_rules(filtered_rules.copy())
 
 # Convert the dataframe to an HTML table
-html_table = filtered_rules_display[['antecedents','antecedent support' ,'consequents', 'consequent support', 'support', 'confidence']].to_html(index=False)
+html_table = filtered_rules_display[['antecedents', 'consequents',  'support', 'confidence']].to_html(index=False)
 
 # Format rules for display
 if not filtered_rules.empty:
