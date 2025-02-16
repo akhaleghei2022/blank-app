@@ -25,12 +25,6 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import qrcode
 from io import BytesIO
-import sys
-st.write(sys.executable) 
-
-#!pip install seaborn
-import seaborn as sns
-
 # Input for QR code URL
 url = st.text_input("Enter the text or URL for which you want to generate a QR code:")
 
@@ -198,15 +192,27 @@ product_frequencies = transaction_data.sum().sort_values(ascending=False)
 
 # Plotting the frequency table
 st.write("Product Frequency Chart:")
+# Create a custom plot with a smaller figure size
 fig, ax = plt.subplots(figsize=(8, 6))  # Adjusted size
-sns.barplot(x=product_frequencies.index, y=product_frequencies.values, palette="Blues_d", ax=ax)  # Custom color palette
-ax.set_title("Product Frequency", fontsize=16, weight='bold')  # Title with custom size and weight
-ax.set_xlabel("Products", fontsize=12, weight='bold')  # X-axis label with custom size and weight
-ax.set_ylabel("Frequency", fontsize=12, weight='bold')  # Y-axis label with custom size and weight
-ax.tick_params(axis='both', labelsize=10)  # Adjust tick label size
-ax.grid(True, linestyle='--', alpha=0.7)  # Add gridlines with dashed lines and slight transparency
+
+# Bar plot using plt (Matplotlib)
+ax.bar(product_frequencies.index, product_frequencies.values, color='skyblue')
+
+# Set the title and labels with custom styling
+ax.set_title("Product Frequency", fontsize=16, fontweight='bold')  # Title with custom size and weight
+ax.set_xlabel("Products", fontsize=12, fontweight='bold')  # X-axis label with custom size and weight
+ax.set_ylabel("Frequency", fontsize=12, fontweight='bold')  # Y-axis label with custom size and weight
+
 # Rotate x-axis labels for better readability
 plt.xticks(rotation=45, ha='right')
+
+# Adjust tick label size
+ax.tick_params(axis='both', labelsize=10)
+
+# Add gridlines
+ax.grid(True, linestyle='--', alpha=0.7)
+
+# Show the plot in Streamlit
 st.pyplot(fig)
 ############################
 # Sidebar sliders for thresholds
