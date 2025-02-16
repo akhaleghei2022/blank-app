@@ -191,7 +191,6 @@ transaction_data.index = [f"Basket {i+1}" for i in range(len(transaction_data))]
 product_frequencies = transaction_data.sum().sort_values(ascending=False)
 
 # Plotting the frequency table
-st.write("Product Frequency Chart:")
 # Create a custom plot with a smaller figure size
 fig, ax1 = plt.subplots(figsize=(10, 6))  # Adjusted size
 
@@ -199,8 +198,8 @@ fig, ax1 = plt.subplots(figsize=(10, 6))  # Adjusted size
 ax1.bar(product_frequencies.index, product_frequencies.values, color='skyblue')
 
 # Set the title and labels with custom styling
-ax1.set_title("Product Frequency", fontsize=30, fontweight='bold')  # Title with custom size and weight
-ax1.set_xlabel("Products", fontsize=20, fontweight='bold')  # X-axis label with custom size and weight
+ax1.set_title("Product Frequency Chart", fontsize=30, fontweight='bold')  # Title with custom size and weight
+#ax1.set_xlabel("Products", fontsize=20, fontweight='bold')  # X-axis label with custom size and weight
 ax1.set_ylabel("Absolute Frequency", fontsize=20, fontweight='bold')  # Left Y-axis label
 
 # Rotate x-axis labels for better readability
@@ -210,21 +209,8 @@ plt.xticks(rotation=45, ha='right')
 ax1.tick_params(axis='both', labelsize=20)
 
 # Add gridlines
-ax1.grid(True, linestyle='--', alpha=0.1)
+ax1.grid(True, linestyle='--', alpha=0.5)
 
-# Create the second y-axis for relative frequency
-ax2 = ax1.twinx()
-
-# Calculate relative frequency
-total_products = product_frequencies.sum()
-relative_frequencies = product_frequencies / total_products
-
-# Plot relative frequency on the right y-axis
-ax2.plot(product_frequencies.index, relative_frequencies.values, color='orange', marker='o', linestyle='-', label="Relative Frequency")
-
-# Set the right Y-axis label
-ax2.set_ylabel("Relative Frequency", fontsize=20, fontweight='bold')  # Right Y-axis label
-ax2.tick_params(axis='y', labelsize=20)
 
 # Show the plot in Streamlit
 st.pyplot(fig)
