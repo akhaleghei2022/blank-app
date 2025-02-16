@@ -195,7 +195,7 @@ product_frequencies = transaction_data.sum().sort_values(ascending=False)
 # Plotting the frequency table
 st.write("Product Frequency Chart:")
 #st.bar_chart(product_frequencies)
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(8, 4))
 product_frequencies.plot(kind='bar', ax=ax,color='red')
 ax.tick_params(axis='both', labelsize=20)  # Increase size of tick labels
 st.pyplot(fig)
