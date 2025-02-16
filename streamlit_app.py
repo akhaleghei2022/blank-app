@@ -156,18 +156,19 @@ custom_css = """
         margin-left: auto;
         margin-right: auto;
     }
-    .dataframe th {
+    .dataframe th, .dataframe td {
         padding: 8px;
         border: 1px solid black;
-        text-align: left !important; /* Force left alignment for headers */
+        text-align: left; /* Left-align both header and data */
+    }
+    .dataframe th {
+        font-size: 30px !important;  /* Ensuring header font size is set */
     }
     .dataframe td {
-        padding: 8px;
-        border: 1px solid black;
-        text-align: left; /* Left-align data as well */
+        font-size: 30px !important;  /* Ensuring data font size is set */
     }
     </style>
-    """
+"""
 
 # Combine CSS and HTML
 html_code = custom_css + html_table
