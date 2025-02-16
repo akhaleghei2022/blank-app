@@ -143,7 +143,7 @@ st.title("Transactional Data Table")
 #st.dataframe(df_display)
 df_display = df_display.rename(columns= {"Items": "Items in the Basket"})
 # Convert the dataframe to an HTML table
-html_table = df_display.to_html(index=False)
+html_table = df_display.to_html(index=False, escape=False)
 
 ############################
 # Add custom CSS for font size and styling
@@ -151,7 +151,7 @@ html_table = df_display.to_html(index=False)
 custom_css = """
     <style>
     .dataframe {
-        font-size: 30px !important;
+        font-size: 30px !important;  /* Force font size */
         border-collapse: collapse;
         margin-left: auto;
         margin-right: auto;
@@ -159,13 +159,7 @@ custom_css = """
     .dataframe th, .dataframe td {
         padding: 8px;
         border: 1px solid black;
-        text-align: left; /* Left-align both header and data */
-    }
-    .dataframe th {
-        font-size: 30px !important;  /* Ensuring header font size is set */
-    }
-    .dataframe td {
-        font-size: 30px !important;  /* Ensuring data font size is set */
+        text-align: left;  /* Ensure text alignment for both header and data */
     }
     </style>
 """
