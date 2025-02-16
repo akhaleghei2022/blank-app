@@ -188,6 +188,14 @@ def preprocess_transactions(transactions):
 transaction_data = preprocess_transactions(df['Items'])
 transaction_data.index = [f"Basket {i+1}" for i in range(len(transaction_data))]
 
+############################ Display frequency of table 
+# Frequency table of products (sum of 1s for each product)
+product_frequencies = transaction_data.sum().sort_values(ascending=False)
+
+# Plotting the frequency table
+st.write("Product Frequency Table:")
+st.bar_chart(product_frequencies)
+############################
 # Sidebar sliders for thresholds
 st.sidebar.title("Adjust Thresholds")
 #min_antecedent_support = st.sidebar.slider("Min Antecedents Support", 0.0001, 1.0, 0.0001, 0.01)
