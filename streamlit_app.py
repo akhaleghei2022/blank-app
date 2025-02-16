@@ -151,7 +151,7 @@ html_table = df_display.to_html(index=False)
 custom_css = """
     <style>
     .dataframe {
-        font-size: 20px !important;
+        font-size: 30px !important;
         border-collapse: collapse;
         margin-left: auto;
         margin-right: auto;
@@ -200,7 +200,7 @@ ax1.bar(product_frequencies.index, product_frequencies.values, color='skyblue')
 # Set the title and labels with custom styling
 ax1.set_title("Product Frequency Chart", fontsize=30, fontweight='bold')  # Title with custom size and weight
 #ax1.set_xlabel("Products", fontsize=20, fontweight='bold')  # X-axis label with custom size and weight
-ax1.set_ylabel("Absolute Frequency", fontsize=20, fontweight='bold')  # Left Y-axis label
+#ax1.set_ylabel("Absolute Frequency", fontsize=20, fontweight='bold')  # Left Y-axis label
 
 # Rotate x-axis labels for better readability
 plt.xticks(rotation=45, ha='right')
