@@ -210,6 +210,8 @@ if not frequent_itemsets.empty:
 else:
     filtered_rules = pd.DataFrame(columns=['antecedents','consequents', 'support', 'confidence'])
 
+filtered_rules['confidence'] = filtered_rules['confidence'].apply(lambda x: round(x, 3))
+
 # Number of unique products (items) in the transactional data
 num_products = len(df['Items'].explode().unique())
 
@@ -222,7 +224,7 @@ num_filtered_rules = len(filtered_rules)
 # Display information in Streamlit
 st.markdown(f"#### Number of products: {num_products}")
 st.markdown(f"#### Number of baskets: {num_baskets}")
-st.markdown(f"#### Number of association rules: {num_filtered_rules}")
+#st.markdown(f"#### Number of association rules: {num_filtered_rules}")
 ######################################
 # Format rules for display
 def format_rules(rules_df):
