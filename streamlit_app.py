@@ -25,7 +25,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import qrcode
 from io import BytesIO
-
+import seaborn as sns
 
 # Input for QR code URL
 url = st.text_input("Enter the text or URL for which you want to generate a QR code:")
