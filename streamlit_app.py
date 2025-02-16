@@ -25,7 +25,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import qrcode
 from io import BytesIO
-!pip install seaborn
+#!pip install seaborn
 import seaborn as sns
 
 # Input for QR code URL
