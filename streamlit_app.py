@@ -151,7 +151,7 @@ html_table = df_display.to_html(index=False, escape=False)
 custom_css = """
     <style>
     .dataframe {
-        font-size: 30px !important;  /* Force font size */
+        font-size: 100px !important;  /* Force font size */
         border-collapse: collapse;
         margin-left: auto;
         margin-right: auto;
