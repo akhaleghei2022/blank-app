@@ -193,8 +193,12 @@ transaction_data.index = [f"Basket {i+1}" for i in range(len(transaction_data))]
 product_frequencies = transaction_data.sum().sort_values(ascending=False)
 
 # Plotting the frequency table
-st.write("Product Frequency Table:")
-st.bar_chart(product_frequencies)
+st.write("Product Frequency Chart:")
+#st.bar_chart(product_frequencies)
+fig, ax = plt.subplots()
+product_frequencies.plot(kind='bar', ax=ax,color='red')
+ax.tick_params(axis='both', labelsize=20)  # Increase size of tick labels
+st.pyplot(fig)
 ############################
 # Sidebar sliders for thresholds
 st.sidebar.title("Adjust Thresholds")
