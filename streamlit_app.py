@@ -210,7 +210,8 @@ ax1.tick_params(axis='both', labelsize=20)
 
 # Add gridlines
 ax1.grid(True, linestyle='--', alpha=1)
-
+from matplotlib.ticker import MaxNLocator
+ax1.yaxis.set_major_locator(MaxNLocator(integer=True))
 
 # Show the plot in Streamlit
 st.pyplot(fig)
