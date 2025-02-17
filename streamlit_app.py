@@ -263,7 +263,9 @@ def format_rules(rules_df):
 filtered_rules_display = format_rules(filtered_rules.copy())
 
 # Convert the dataframe to an HTML table
-html_table = filtered_rules_display[['antecedents', 'consequents',  'support', 'confidence']].to_html(index=False)
+filtered_rules_1 = filtered_rules_display[['antecedents', 'consequents',  'support', 'confidence']]
+filtered_rules_1.columns = ['Antecedents','Consequents','Support', 'Confidence']
+html_table = filtered_rules_1.to_html(index=False)
 
 # Format rules for display
 if not filtered_rules.empty:
