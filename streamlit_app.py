@@ -187,7 +187,7 @@ product_frequencies = transaction_data.sum().sort_values(ascending=False)
 
 # Plotting the frequency table
 # Create a custom plot with a smaller figure size
-fig, ax1 = plt.subplots(figsize=(10, 6))  # Adjusted size
+fig, ax1 = plt.subplots(figsize=(8,5))  # Adjusted size
 
 # Bar plot using plt (Matplotlib) for absolute frequency
 ax1.bar(product_frequencies.index, product_frequencies.values, color='skyblue')
