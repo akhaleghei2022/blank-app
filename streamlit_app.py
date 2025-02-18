@@ -143,7 +143,10 @@ st.title("Transactional Data Table")
 #st.dataframe(df_display)
 df_display = df_display.rename(columns= {"Items": "Items in the Basket"})
 # Convert the dataframe to an HTML table
+
 html_table = df_display.to_html(index=False, escape=False)
+
+
 
 ############################
 # Add custom CSS for font size and styling
@@ -168,7 +171,14 @@ custom_css = """
 html_code = custom_css + html_table
 
 # Display the HTML table with Streamlit
-st.markdown(html_table, unsafe_allow_html=True)
+#st.markdown(html_table, unsafe_allow_html=True)
+
+
+if df_display.empty:
+    st.warning("The basket is empty.")
+else:
+    st.markdown(html_table, unsafe_allow_html=True)
+
 ######################################
 # Preprocess data into transaction format
 def preprocess_transactions(transactions):
@@ -193,7 +203,7 @@ fig, ax1 = plt.subplots(figsize=(6,4))  # Adjusted size
 ax1.bar(product_frequencies.index, product_frequencies.values, color='skyblue')
 
 # Set the title and labels with custom styling
-ax1.set_title("Product Frequency Chart", fontsize=30, fontweight='bold')  # Title with custom size and weight
+ax1.set_title("Product Frequency Chart", fontsize=20, fontweight='bold')  # Title with custom size and weight
 #ax1.set_xlabel("Products", fontsize=20, fontweight='bold')  # X-axis label with custom size and weight
 #ax1.set_ylabel("Absolute Frequency", fontsize=20, fontweight='bold')  # Left Y-axis label
 
