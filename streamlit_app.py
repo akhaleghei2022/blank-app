@@ -211,7 +211,7 @@ ax1.set_title("Product Frequency Chart", fontsize=20, fontweight='bold')  # Titl
 plt.xticks(rotation=45, ha='right')
 
 # Adjust tick label size
-ax1.tick_params(axis='both', labelsize=20)
+ax1.tick_params(axis='both', labelsize=10)
 
 # Add gridlines
 ax1.grid(True, linestyle='--', alpha=1)
